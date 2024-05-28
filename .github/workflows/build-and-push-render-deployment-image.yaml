@@ -62,17 +62,15 @@ jobs:
             type=raw,value=render
             type=raw,value=railway
 
-      - name: Build and push multi-platform Docker image
-        uses: docker/build-push-action@v5
+      - uses: mr-smithers-excellent/docker-build-push@v6
+        name: Build & push Docker image
         with:
-          context: .
-          file: ./docker/render.Dockerfile
-          push: true
-          platforms: linux/amd64
-          outputs: type=registry,dest=${{ secrets.DOCKER_USERNAME }}/customized-anything-llm:render
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            "STORAGE_DIR=/storage"
+          image: tlcheah/customized-anything-llm:render
+          tags: render
+          registry: docker.io
+          platform: linux/amd64
+          dockerfile: ./docker/render.Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: |
+            STORAGE_DIR=/storage
