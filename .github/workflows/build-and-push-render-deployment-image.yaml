@@ -6,17 +6,16 @@ concurrency:
 
 on:
   push:
-    branches: ['render']
+    branches: ["render"]
     paths-ignore:
-      - '**.md'
-      - 'cloud-deployments/*'
-      - 'images/**/*'
-      - '.vscode/**/*'
-      - '**/.env.example'
-      - '.github/ISSUE_TEMPLATE/**/*'
-      - 'render.yaml'
-      - 'embed/**/*' # Embed should be published to frontend (yarn build:publish) if any changes are introduced
-
+      - "**.md"
+      - "cloud-deployments/*"
+      - "images/**/*"
+      - ".vscode/**/*"
+      - "**/.env.example"
+      - ".github/ISSUE_TEMPLATE/**/*"
+      - "render.yaml"
+      - "embed/**/*" # Embed should be published to frontend (yarn build:publish) if any changes are introduced
 
 jobs:
   push_to_registries:
@@ -48,20 +47,20 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         # Only login to the Docker Hub if the repo is mintplex/anythingllm, to allow for forks to build on GHCR
-        if: steps.dockerhub.outputs.enabled == 'true' 
+        if: steps.dockerhub.outputs.enabled == 'true'
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: |
-            ${{ steps.dockerhub.outputs.enabled == 'true' && 'mintplexlabs/anythingllm' || '' }}
-          tags: |
-            type=raw,value=render
-            type=raw,value=railway
+      # - name: Extract metadata (tags, labels) for Docker
+      #   id: meta
+      #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      #   with:
+      #     images: |
+      #       ${{ steps.dockerhub.outputs.enabled == 'true' && 'mintplexlabs/anythingllm' || '' }}
+      #     tags: |
+      #       type=raw,value=render
+      #       type=raw,value=railway
 
       - name: Build and push multi-platform Docker image
         uses: docker/build-push-action@v5
@@ -70,8 +69,8 @@ jobs:
           file: ./docker/render.Dockerfile
           push: true
           platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # tags: ${{ steps.meta.outputs.tags }}
+          # labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
