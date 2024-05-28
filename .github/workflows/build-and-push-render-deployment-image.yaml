@@ -65,7 +65,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & push Docker image
         with:
-          image: tlcheah/customized-anything-llm:render
+          image: tlcheah/customized-anything-llm
           tags: render
           registry: docker.io
           platform: linux/amd64
