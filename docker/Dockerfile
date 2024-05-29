@@ -4,6 +4,7 @@ FROM ubuntu:jammy-20230916 AS base
 # Build arguments
 ARG ARG_UID=1000
 ARG ARG_GID=1000
+ARG ARG_CUSTOM_APP_NAME=TheGreatRoomLLM
 
 FROM base AS build-arm64
 RUN echo "Preparing build of AnythingLLM image for arm64 architecture"
@@ -138,6 +139,7 @@ USER anythingllm
 FROM frontend-deps AS build-stage
 COPY ./frontend/ ./frontend/
 WORKDIR /app/frontend
+RUN echo "VITE_CUSTOM_APP_NAME='$ARG_CUSTOM_APP_NAME'" >> .env.production
 RUN yarn build && yarn cache clean
 WORKDIR /app
 
